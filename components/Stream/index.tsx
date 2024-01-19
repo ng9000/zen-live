@@ -1,7 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { LiveKitRoom } from "@livekit/components-react";
-import { Stream, User } from "@prisma/client";
 
 import { useViewerToken } from "@/hooks/use-viewer-token";
 import { VideoPlayer, VideoSkeleton } from "./video-player";
@@ -20,6 +19,7 @@ type CustomStream = {
   isChatDelayed: boolean;
   isChatEnabled: boolean;
   isChatFollowersOnly: boolean;
+  updatedAt: Date;
 };
 
 type CustomUser = {
@@ -42,8 +42,10 @@ export const StreamPlayer = ({
   stream,
   isFollowing,
 }: StreamPlayerProps) => {
-  const { token, identity, name } = useViewerToken(user.id);
+  const { token, identity, name, mod } = useViewerToken(user.id);
+
   const { collapsed } = useChatSidebar((state) => state);
+
   if (!token || !identity || !name) {
     return <StreamPlayerSkeleton />;
   }
@@ -71,6 +73,7 @@ export const StreamPlayer = ({
             hostName={user.username}
             isFollowing={isFollowing}
             name={stream.name}
+            lastSeen={stream.updatedAt}
           />
           <InfoCard
             hostIdentity={user.id}
@@ -89,6 +92,7 @@ export const StreamPlayer = ({
         <div className={cn("col-span-1", collapsed && "hidden")}>
           <Chat
             viewer={name}
+            moderator={mod}
             hostname={user.username}
             hostIdentity={user.id}
             isFollowing={isFollowing}

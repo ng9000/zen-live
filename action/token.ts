@@ -5,6 +5,7 @@ import { v4 } from "uuid";
 import { getSelf } from "@/lib/auth-service";
 import { getUserById } from "@/lib/user-service";
 import { isBlockedByUser } from "@/lib/block-service";
+import { amIModerator } from "@/lib/moderator-service";
 
 export const createViewerToken = async (hostIdentity: string) => {
   let self;
@@ -21,6 +22,7 @@ export const createViewerToken = async (hostIdentity: string) => {
   }
 
   const host = await getUserById(hostIdentity);
+  const moderator = await amIModerator(hostIdentity);
 
   if (!host) {
     throw new Error("User not found");
@@ -38,6 +40,7 @@ export const createViewerToken = async (hostIdentity: string) => {
     {
       identity: isHost ? `host-${self.id}` : self.id,
       name: self.username,
+      metadata: moderator ? "true" : "false",
     }
   );
 

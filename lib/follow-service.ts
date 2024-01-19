@@ -1,7 +1,7 @@
 import { getSelf } from "./auth-service";
 import { db } from "./db";
 
-export const getFollowedUSers = async () => {
+export const getFollowedUsers = async () => {
   try {
     const self = await getSelf();
     const followedUsers = db.follow.findMany({

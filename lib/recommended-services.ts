@@ -13,6 +13,7 @@ export const GetRecommended = async () => {
   let users = [];
   if (userId) {
     users = await db.user.findMany({
+      take: 10,
       where: {
         AND: [
           {

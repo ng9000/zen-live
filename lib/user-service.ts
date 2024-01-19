@@ -20,6 +20,7 @@ export const getUserByUsername = async (username: string) => {
           isChatDelayed: true,
           isChatEnabled: true,
           isChatFollowersOnly: true,
+          updatedAt: true,
         },
       },
       _count: {

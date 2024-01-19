@@ -9,6 +9,7 @@ import {
 import { UserIcon } from "lucide-react";
 import { ActionSkeleton, Actions } from "./actions";
 import { Skeleton } from "@/components/ui/skeleton";
+import moment from "moment";
 
 interface HeaderProps {
   hostIdentity: string;
@@ -17,6 +18,7 @@ interface HeaderProps {
   hostName: string;
   isFollowing: boolean;
   name: string;
+  lastSeen: Date;
 }
 
 export const Header = ({
@@ -26,6 +28,7 @@ export const Header = ({
   hostName,
   isFollowing,
   name,
+  lastSeen,
 }: HeaderProps) => {
   const participants = useParticipants();
   const participant = useRemoteParticipant(hostIdentity);
@@ -62,7 +65,7 @@ export const Header = ({
             </div>
           ) : (
             <p className="font-semibold text-xs text-muted-foreground">
-              Offline
+              Last seen: {moment(lastSeen).startOf("minute").fromNow()}
             </p>
           )}
         </div>

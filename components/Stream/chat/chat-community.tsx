@@ -14,12 +14,14 @@ interface ChatCommunityProps {
   hostName: string;
   viewerName: string;
   isHidden: boolean;
+  moderator?: boolean;
 }
 
 export const ChatCommunity = ({
   hostName,
   viewerName,
   isHidden,
+  moderator,
 }: ChatCommunityProps) => {
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce<string>(value, 500);
@@ -65,15 +67,19 @@ export const ChatCommunity = ({
         <p className="text-center text-sm text-muted-foreground hidden last:block p-2">
           No results
         </p>
-        {filteredParticipants.map((participant) => (
-          <CommunityItem
-            key={participant.identity}
-            hostName={hostName}
-            viewerName={viewerName}
-            participantName={participant.name}
-            participantIdentity={participant.identity}
-          />
-        ))}
+        {filteredParticipants.map((participant) => {
+          if (participant.name === hostName) return null;
+          return (
+            <CommunityItem
+              key={participant.identity}
+              hostName={hostName}
+              viewerName={viewerName}
+              participantName={participant.name}
+              participantIdentity={participant.identity}
+              moderator={moderator}
+            />
+          );
+        })}
       </ScrollArea>
     </div>
   );

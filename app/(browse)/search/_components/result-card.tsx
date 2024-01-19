@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { User } from "@prisma/client";
-import { formatDistanceToNow } from "date-fns";
+import moment from "moment";
 
 import { Thumbnail, ThumbnailSkeleton } from "@/components/thumbnail";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -38,9 +38,10 @@ export const ResultCard = ({ data }: ResultCardProps) => {
           </div>
           <p className="text-sm text-muted-foreground">{data.name}</p>
           <p className="text-sm text-muted-foreground">
-            {formatDistanceToNow(new Date(data.updatedAt), {
+            {/* {formatDistanceToNow(new Date(data.updatedAt), {
               addSuffix: true,
-            })}
+            })} */}
+            {moment(data.updatedAt).format("dd/mm/yyyy")}
           </p>
         </div>
       </div>

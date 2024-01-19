@@ -1,24 +1,21 @@
 "use client";
 
-import { toast } from "sonner";
-import { useTransition } from "react";
-
+import { deleteModerator } from "@/action/block";
 import { Button } from "@/components/ui/button";
-import { onUnblock } from "@/action/unblock";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
-interface UnblockButtonProps {
+interface RemoveModButtonProps {
   userId: string;
 }
 
-export const UnblockButton = ({ userId }: UnblockButtonProps) => {
+export const RemoveModButton = ({ userId }: RemoveModButtonProps) => {
   const [isPending, startTransition] = useTransition();
 
   const onClick = () => {
     startTransition(() => {
-      onUnblock(userId)
-        .then((result) =>
-          toast.success(`User ${result.blocked.username} unblocked`)
-        )
+      deleteModerator(userId)
+        .then(() => toast.success(`Removed moderator`))
         .catch(() => toast.error("Something went wrong"));
     });
   };
@@ -31,7 +28,7 @@ export const UnblockButton = ({ userId }: UnblockButtonProps) => {
       size="sm"
       className="text-blue-500 w-full"
     >
-      Unblock
+      Remove moderator
     </Button>
   );
 };

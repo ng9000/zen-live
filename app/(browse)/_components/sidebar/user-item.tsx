@@ -20,33 +20,35 @@ export const UserItem = ({ username, imageUrl, isLive }: UserProps) => {
   const isActive = pathname === href;
 
   return (
-    <Button
-      asChild
-      variant="ghost"
-      className={cn(
-        "w-full h-1/2",
-        collapsed ? "justify-center" : "justify-start",
-        isActive && "bg-accent"
-      )}
-    >
-      <Link href={href}>
-        <div
-          className={cn(
-            "flex items-center w-full gap-x-4",
-            collapsed && "justify-center"
-          )}
-        >
-          <UserAvatar
-            imageUrl={imageUrl}
-            username={username}
-            isLive={isLive}
-            //showBadge
-          />
-          {!collapsed && <p className="truncate">{username}</p>}
-          {!collapsed && isLive && <LiveBadge className="ml-auto" />}
-        </div>
-      </Link>
-    </Button>
+    <li>
+      <Button
+        asChild
+        variant="ghost"
+        className={cn(
+          "w-full h-1/2",
+          collapsed ? "justify-center" : "justify-start",
+          isActive && "bg-accent"
+        )}
+      >
+        <Link href={href}>
+          <div
+            className={cn(
+              "flex items-center w-full gap-x-4",
+              collapsed && "justify-center"
+            )}
+          >
+            <UserAvatar
+              imageUrl={imageUrl}
+              username={username}
+              isLive={isLive}
+              //showBadge
+            />
+            {!collapsed && <p className="truncate">{username}</p>}
+            {!collapsed && isLive && <LiveBadge className="ml-auto" />}
+          </div>
+        </Link>
+      </Button>
+    </li>
   );
 };
 

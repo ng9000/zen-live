@@ -1,6 +1,8 @@
 "use server";
 import { getSelf } from "@/lib/auth-service";
-import { blockUser, unBlockUser } from "@/lib/block-service";
+import { blockUser } from "@/lib/block-service";
+import { removeModerator } from "@/lib/moderator-service";
+import { getUserByUsername } from "@/lib/user-service";
 import { RoomServiceClient } from "livekit-server-sdk";
 import { revalidatePath } from "next/cache";
 
@@ -23,22 +25,39 @@ export const onBlock = async (id: string) => {
   if (blockedUser) {
     revalidatePath(`/${blockedUser.blocked.username}`);
   }
+
   return blockedUser;
 };
 
-export const onUnBlock = async (id: string) => {
-  const unBlockedUser = await unBlockUser(id);
-  revalidatePath("/");
-  if (unBlockedUser) {
-    revalidatePath(`/${unBlockedUser.blocked.username}`);
+export const onModBlock = async (id: string, streamer: string) => {
+  const streamer123 = await getUserByUsername(streamer);
+
+  let blockedUser;
+  try {
+    blockedUser = await blockUser(id);
+  } catch (error) {}
+  try {
+    if (streamer123) {
+      await roomService.removeParticipant(streamer123?.id, id);
+    }
+  } catch (error) {}
+  revalidatePath(`/u/${streamer}/community`);
+  if (blockedUser) {
+    revalidatePath(`/${blockedUser.blocked.username}`);
   }
-  return unBlockedUser;
+  return blockedUser;
 };
 
-export const onUnblock = async (id: string) => {
+export const deleteModerator = async (userId: string) => {
   const self = await getSelf();
-  const unblockedUser = await unBlockUser(id);
 
-  revalidatePath(`/u/${self.username}/community`);
-  return unblockedUser;
+  const removeMod = await removeModerator({
+    userId: userId,
+    streamerId: self.id,
+  });
+  if (removeMod) {
+    revalidatePath(`/u/${self.id}/community`);
+    await roomService.removeParticipant(self.id, userId);
+    return true;
+  }
 };

@@ -1,14 +1,13 @@
-import React from "react";
 import { Wrapper } from "./wrapper";
 import { Toggle, ToggleSkeleton } from "./toggle";
 import { Recommended, RecommendedSkeleton } from "./recommended";
 import { GetRecommended } from "@/lib/recommended-services";
-import { getFollowedUSers } from "@/lib/follow-service";
+import { getFollowedUsers } from "@/lib/follow-service";
 import { Following, FollowingSkeleton } from "./following";
 
 export const SideBar = async () => {
   const recommended = await GetRecommended();
-  const followedUsers = await getFollowedUSers();
+  const followedUsers = await getFollowedUsers();
   return (
     <Wrapper>
       <Toggle />

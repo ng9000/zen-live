@@ -1,8 +1,13 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
-import { Fullscreen, KeyRound, MessageSquare, Users } from "lucide-react";
+import {
+  Fullscreen,
+  HelpCircle,
+  KeyRound,
+  MessageSquare,
+  Users,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
-import React from "react";
 import { NavItem, NavItemSkeleton } from "./nav-item";
 
 export const Navigation = () => {
@@ -30,12 +35,17 @@ export const Navigation = () => {
       href: `/u/${user?.username}/community`,
       icon: Users,
     },
+    {
+      label: "How to start a stream",
+      href: `/u/${user?.username}/how-to`,
+      icon: HelpCircle,
+    },
   ];
 
   if (!user?.username) {
     return (
       <ul className="space-y-2">
-        {[...Array(4)].map((_, i) => (
+        {[...Array(5)].map((_, i) => (
           <NavItemSkeleton key={i} />
         ))}
       </ul>

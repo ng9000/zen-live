@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import qs from "query-string";
 import { SearchIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -50,7 +49,10 @@ export const Search = () => {
         size="sm"
         variant="secondary"
       >
-        <SearchIcon className="h-5 w-5 text-muted-foreground" />
+        <SearchIcon
+          className="h-5 w-5 text-muted-foreground"
+          aria-label="search users"
+        />
       </Button>
     </form>
   );

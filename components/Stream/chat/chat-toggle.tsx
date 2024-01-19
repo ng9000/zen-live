@@ -11,6 +11,7 @@ export const ChatToggle = () => {
   const { collapsed, onExpand, onCollapse } = useChatSidebar((state) => state);
   const label = collapsed ? "Expand" : "Collapse";
   const Icon = collapsed ? ArrowLeftFromLine : ArrowRightFromLine;
+  const ariaLabel = collapsed ? "open chat" : "close chat";
 
   const onToggle = () => {
     if (collapsed) {
@@ -26,7 +27,7 @@ export const ChatToggle = () => {
         variant="ghost"
         onClick={onToggle}
       >
-        <Icon className="h-4 w-4" />
+        <Icon className="h-4 w-4" aria-label={ariaLabel} />
       </Button>
     </Hint>
   );
