@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteModerator } from "@/action/block";
+import { deleteModerator } from "@/action/moderator";
 import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
 import { toast } from "sonner";

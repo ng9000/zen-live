@@ -42,7 +42,7 @@ export const StreamPlayer = ({
   stream,
   isFollowing,
 }: StreamPlayerProps) => {
-  const { token, identity, name, mod } = useViewerToken(user.id);
+  const { token, identity, name } = useViewerToken(user.id);
 
   const { collapsed } = useChatSidebar((state) => state);
 
@@ -92,7 +92,6 @@ export const StreamPlayer = ({
         <div className={cn("col-span-1", collapsed && "hidden")}>
           <Chat
             viewer={name}
-            moderator={mod}
             hostname={user.username}
             hostIdentity={user.id}
             isFollowing={isFollowing}

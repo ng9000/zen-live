@@ -5,6 +5,7 @@ import {
   HelpCircle,
   KeyRound,
   MessageSquare,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -29,6 +30,11 @@ export const Navigation = () => {
       label: "Chat",
       href: `/u/${user?.username}/chat`,
       icon: MessageSquare,
+    },
+    {
+      label: "Moderators",
+      href: `/u/${user?.username}/moderators`,
+      icon: Sparkles,
     },
     {
       label: "Community",

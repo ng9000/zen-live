@@ -1,13 +1,23 @@
 "use client";
 
 import { cn, stringToColor } from "@/lib/utils";
-import { onBlock, onModBlock } from "@/action/block";
+import { onBlock } from "@/action/block";
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
-import { MinusCircle, Sparkle } from "lucide-react";
-import { useTransition } from "react";
+import { MinusCircle, Sparkle, Sparkles } from "lucide-react";
+import { ElementRef, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { addModerator } from "@/action/moderator";
+import { addModerator, onModBlock } from "@/action/moderator";
+import {
+  Dialog,
+  DialogClose,
+  DialogTitle,
+  DialogHeader,
+  DialogTrigger,
+  DialogContent,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface CommunityItemProps {
   hostName: string;
@@ -25,14 +35,15 @@ export const CommunityItem = ({
   moderator,
 }: CommunityItemProps) => {
   const [isPending, startTransition] = useTransition();
+  const [confirmMod, setConfirmMod] = useState("");
+  const closeModeratorModalRef = useRef<ElementRef<"button">>(null);
+
   const color = stringToColor(participantName || "");
 
   const isSelf = participantName === viewerName;
   const isHost = viewerName === hostName;
 
   const handleBlock = () => {
-    // if (!participantName || isSelf || !isHost) return;
-
     if (moderator) {
       startTransition(() => {
         onModBlock(participantIdentity, hostName)
@@ -48,19 +59,32 @@ export const CommunityItem = ({
     }
   };
 
-  const newModerator = () => {
-    if (!moderator) {
-      startTransition(() => {
-        if (participantName) {
-          addModerator({
-            userId: participantIdentity,
-            username: participantName,
-          })
-            .then(() => toast.success(`Assigned ${participantName} moderator`))
-            .catch(() => toast.error("Something went wrong"));
-        }
-      });
+  const newModerator = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (confirmMod === `make ${participantName} moderator`) {
+      if (!moderator) {
+        startTransition(() => {
+          if (participantName) {
+            addModerator({
+              userId: participantIdentity,
+              username: hostName,
+            })
+              .then(() => {
+                toast.success(`Assigned ${participantName} moderator`);
+                closeModeratorModalRef?.current?.click();
+              })
+              .catch(() => toast.error("Something went wrong"));
+          }
+        });
+      }
+    } else {
+      toast.error(`Entered prompt was wrong`);
     }
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmMod(e.target.value);
   };
   return (
     <div
@@ -69,18 +93,66 @@ export const CommunityItem = ({
         isPending && "opacity-50 pointer-events-none"
       )}
     >
-      <p style={{ color: color }}>{participantName}</p>
+      <p
+        style={{ color: moderator ? "#bd3535" : color }}
+        className={moderator ? "font-bold" : ""}
+      >
+        {participantName}
+        {moderator ? (
+          <Sparkles className="w-3 h-3 text-red-500 inline-block" />
+        ) : null}
+      </p>
       <div className="">
-        {isHost && (
+        {isHost && !moderator && (
           <Hint label="Promote to moderator">
-            <Button
-              variant="ghost"
-              disabled={isPending}
-              onClick={newModerator}
-              className="h-auto w-auto p-1 opacity-0 group-hover:opacity-100 transition"
-            >
-              <Sparkle className="h-4 w-4 text-muted-foreground" />
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  disabled={isPending}
+                  className="h-auto w-auto p-1 opacity-0 group-hover:opacity-100 transition"
+                >
+                  <Sparkle className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Make moderator</DialogTitle>
+                </DialogHeader>
+                <form className="space-y-14" onSubmit={newModerator}>
+                  <div className="space-y-2">
+                    <Label className="text-muted-foreground">
+                      Write following sentence in the below input{" "}
+                      <span className="font-bold select-none text-red-400">
+                        make {participantName} moderator
+                      </span>{" "}
+                      to confirm
+                    </Label>
+                    <Input
+                      value={confirmMod}
+                      placeholder="Stream name"
+                      disabled={isPending}
+                      onChange={onChange}
+                    />
+                  </div>
+
+                  <div className="flex justify-between">
+                    <DialogClose asChild ref={closeModeratorModalRef}>
+                      <Button type="button" variant="ghost">
+                        Cancle
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      type="submit"
+                      variant="destructive"
+                      disabled={isPending}
+                    >
+                      Make moderator
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </Hint>
         )}
 

@@ -22,7 +22,6 @@ interface ChatProps {
   isChatEnabled: boolean;
   isChatDelayed: boolean;
   isChatFollowersOnly: boolean;
-  moderator?: boolean;
 }
 
 export const Chat = ({
@@ -33,7 +32,6 @@ export const Chat = ({
   isChatEnabled,
   isChatDelayed,
   isChatFollowersOnly,
-  moderator,
 }: ChatProps) => {
   const matches = useMediaQuery("(max-width: 1024px)");
   const { variant, onExpand } = useChatSidebar();
@@ -87,7 +85,6 @@ export const Chat = ({
       {variant === ChatVariant.COMMUNITY && (
         <>
           <ChatCommunity
-            moderator={moderator}
             isHidden={isHidden}
             viewerName={viewer}
             hostName={hostname}

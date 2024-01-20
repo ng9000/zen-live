@@ -9,7 +9,6 @@ export const useViewerToken = (hostIdentity: string) => {
   const [token, setToken] = useState("");
   const [name, setName] = useState("");
   const [identity, setIdentity] = useState("");
-  const [mod, setMod] = useState<boolean>();
 
   const createToken = async () => {
     try {
@@ -24,14 +23,8 @@ export const useViewerToken = (hostIdentity: string) => {
 
       const name = decodedToken.name;
       const identity = decodedToken.jti;
-      const moderator = decodedToken.metadata;
       if (identity) {
         setIdentity(identity);
-      }
-      if (moderator === "true") {
-        setMod(true);
-      } else {
-        setMod(false);
       }
       if (name) {
         setName(name);
@@ -48,6 +41,5 @@ export const useViewerToken = (hostIdentity: string) => {
     token,
     name,
     identity,
-    mod,
   };
 };

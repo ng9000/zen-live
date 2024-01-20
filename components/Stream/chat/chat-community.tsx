@@ -14,14 +14,12 @@ interface ChatCommunityProps {
   hostName: string;
   viewerName: string;
   isHidden: boolean;
-  moderator?: boolean;
 }
 
 export const ChatCommunity = ({
   hostName,
   viewerName,
   isHidden,
-  moderator,
 }: ChatCommunityProps) => {
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce<string>(value, 500);
@@ -76,7 +74,7 @@ export const ChatCommunity = ({
               viewerName={viewerName}
               participantName={participant.name}
               participantIdentity={participant.identity}
-              moderator={moderator}
+              moderator={participant?.metadata === "true" ? true : false}
             />
           );
         })}
