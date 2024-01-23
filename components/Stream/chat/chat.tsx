@@ -41,7 +41,7 @@ export const Chat = ({
   const isOnline = participant && connectionState === ConnectionState.Connected;
   const isHidden = !isChatEnabled || !isOnline;
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<string>("");
   const { chatMessages: messages, send } = useChat();
 
   useEffect(() => {
@@ -71,10 +71,12 @@ export const Chat = ({
       {variant === ChatVariant.CHAT && (
         <>
           <ChatList isHidden={isHidden} messages={reversedMessages} />
+
           <ChatForm
             onSubmit={onSubmit}
             onChange={onChange}
             value={value}
+            setValue={setValue}
             isHidden={isHidden}
             isFollowersOnly={isChatFollowersOnly}
             isDelayed={isChatDelayed}

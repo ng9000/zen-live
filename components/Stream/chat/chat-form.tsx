@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatInfo } from "./chat-info";
+import { EmojiInput } from "./emoji-input";
 
 interface ChatFormProps {
   onSubmit: () => void;
   value: string;
   onChange: (value: string) => void;
+  setValue: Dispatch<SetStateAction<string>>;
   isHidden: boolean;
   isFollowersOnly: boolean;
   isFollowing: boolean;
@@ -26,9 +26,10 @@ export const ChatForm = ({
   isFollowersOnly,
   isFollowing,
   isDelayed,
+  setValue,
 }: ChatFormProps) => {
   const [isDelayBlocked, setIsDelayBlocked] = useState(false);
-
+  const scrollRef = useRef<HTMLFormElement | null>(null);
   const isFollowersOnlyAndNotFollowing = isFollowersOnly && !isFollowing;
   const isDisabled =
     isHidden || isDelayBlocked || isFollowersOnlyAndNotFollowing;
@@ -47,6 +48,9 @@ export const ChatForm = ({
       }, 3000);
     } else {
       onSubmit();
+      if (scrollRef.current) {
+        scrollRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -58,23 +62,29 @@ export const ChatForm = ({
     <form
       onSubmit={handleSubmit}
       className="flex flex-col items-center gap-y-4 p-3"
+      ref={scrollRef}
     >
       <div className="w-full">
         <ChatInfo isDelayed={isDelayed} isFollowersOnly={isFollowersOnly} />
-        <Input
-          onChange={(e) => onChange(e.target.value)}
+        <EmojiInput
+          onChange={onChange}
           value={value}
+          isFollowersOnly={isFollowersOnly}
+          isDelayed={isDelayed}
+          setValue={setValue}
           disabled={isDisabled}
-          placeholder="Send a message"
-          className={cn(
-            "border-white/10",
-            (isFollowersOnly || isDelayed) && "rounded-t-none border-t-0"
-          )}
         />
       </div>
-      <div className="ml-auto">
-        <Button type="submit" variant="primary" size="sm" disabled={isDisabled}>
-          Chat
+
+      <div className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          variant="primary"
+          size="sm"
+          disabled={isDisabled}
+        >
+          Send
         </Button>
       </div>
     </form>
