@@ -5,6 +5,7 @@ import {
   HelpCircle,
   KeyRound,
   MessageSquare,
+  Smile,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -30,6 +31,11 @@ export const Navigation = () => {
       label: "Chat",
       href: `/u/${user?.username}/chat`,
       icon: MessageSquare,
+    },
+    {
+      label: "Custom emojis",
+      href: `/u/${user?.username}/custom-emojis`,
+      icon: Smile,
     },
     {
       label: "Moderators",

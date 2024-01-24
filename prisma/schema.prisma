@@ -31,6 +31,8 @@ model User {
 
   stream Stream?
 
+  userEmojiCategories EmojiCategories[] @relation("CategoriesOfCustomEmojis")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -102,4 +104,41 @@ model Moderator {
   @@unique([streamerId, moderatorId])
   @@index([streamerId])
   @@index([moderatorId])
+}
+
+model EmojiCategories {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Define the relationship with Emoji
+  emojis    Emoji[] @relation("emojis")
+  creator   User    @relation(name: "CategoriesOfCustomEmojis", fields: [creatorId], references: [id])
+  creatorId String // Reference to the User who created this category
+}
+
+model Emoji {
+  id         String   @id @default(uuid())
+  name       String
+  categoryId String // Reference to category
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Define the relationship with Category
+  category EmojiCategories @relation(name: "emojis", fields: [categoryId], references: [id], onDelete: Cascade)
+  skins    EmojiSkin[]
+
+  createdById String // Reference to the User who created this emoji
+}
+
+model EmojiSkin {
+  id        String   @id @default(uuid())
+  emojiId   String
+  src       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Define the relationship with Emoji
+  emoji Emoji @relation(fields: [emojiId], references: [id])
 }

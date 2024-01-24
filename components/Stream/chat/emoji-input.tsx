@@ -1,12 +1,14 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Smile } from "lucide-react";
 import { cn } from "@/lib/utils";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { useMediaQuery } from "usehooks-ts";
+import { getAllCategories } from "@/action/emoji";
+import { EmojiCategories } from "@prisma/client";
 
 interface EmojiInputProps {
   onChange: (value: string) => void;
@@ -16,6 +18,7 @@ interface EmojiInputProps {
   setValue: Dispatch<SetStateAction<string>>;
   disabled: boolean;
 }
+
 export const EmojiInput = ({
   onChange,
   value,
@@ -25,6 +28,7 @@ export const EmojiInput = ({
   disabled,
 }: EmojiInputProps) => {
   const [showPicker, setShowPicker] = useState(false);
+  const [custom, setCustom] = useState<EmojiCategories[]>();
   const ref = useRef<HTMLInputElement>(null);
 
   const mobileEmoji = useMediaQuery("(max-width: 1024px)");
@@ -52,6 +56,13 @@ export const EmojiInput = ({
       ref.current.focus();
     }
   };
+  const getCategory = async () => {
+    const x = await getAllCategories();
+    setCustom(x);
+  };
+  useEffect(() => {
+    getCategory();
+  }, []);
   return (
     <div className="relative select-none">
       {showPicker && !mobileEmoji && (
@@ -61,6 +72,7 @@ export const EmojiInput = ({
             onEmojiSelect={addEmoji}
             perLine={9}
             onClickOutside={() => setShowPicker(false)}
+            custom={custom}
           />
         </div>
       )}
@@ -85,6 +97,7 @@ export const EmojiInput = ({
             onEmojiSelect={addEmoji}
             perLine={6}
             onClickOutside={() => setShowPicker(false)}
+            custom={custom}
           />
         </div>
       )}
