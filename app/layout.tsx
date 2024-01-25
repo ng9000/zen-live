@@ -12,10 +12,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://zen-live.vercel.app/"),
   title: "Zen Live",
   description: "Video live streaming platform",
-  openGraph: {
-    title: "zen live",
-    images: "/opengraph-image.png",
-  },
 };
 
 export default function RootLayout({
