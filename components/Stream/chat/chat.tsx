@@ -82,6 +82,7 @@ export const Chat = ({
             isDelayed={isChatDelayed}
             isFollowing={isFollowing}
           />
+          {/* //TODO: add donate bits to streamer */}
         </>
       )}
       {variant === ChatVariant.COMMUNITY && (

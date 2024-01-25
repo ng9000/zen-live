@@ -11,6 +11,10 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Zen Live",
   description: "Video live streaming platform",
+  openGraph: {
+    title: "zen live",
+    images: "/opengraph-image.png",
+  },
 };
 
 export default function RootLayout({

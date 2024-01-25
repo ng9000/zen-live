@@ -65,17 +65,6 @@ export const EmojiInput = ({
   }, []);
   return (
     <div className="relative select-none">
-      {showPicker && !mobileEmoji && (
-        <div className="p-2 lg:absolute lg:block hidden right-0 bottom-14">
-          <Picker
-            data={data}
-            onEmojiSelect={addEmoji}
-            perLine={9}
-            onClickOutside={() => setShowPicker(false)}
-            custom={custom}
-          />
-        </div>
-      )}
       <div className="flex w-full max-w-sm items-center space-x-2">
         <Input
           onChange={(e) => onChange(e.target.value)}
@@ -90,12 +79,18 @@ export const EmojiInput = ({
         />
         <Smile onClick={openEmojiPicker} className="w-5 h-5 inline-block" />
       </div>
-      {showPicker && mobileEmoji && (
-        <div className="p-2 absolute lg:hidden left-0 bottom-14">
+      {showPicker && (
+        <div
+          className={`p-2 ${
+            mobileEmoji
+              ? "absolute lg:hidden left-0"
+              : "lg:absolute lg:block hidden right-0"
+          } bottom-14`}
+        >
           <Picker
             data={data}
             onEmojiSelect={addEmoji}
-            perLine={6}
+            perLine={mobileEmoji ? 6 : 9}
             onClickOutside={() => setShowPicker(false)}
             custom={custom}
           />
